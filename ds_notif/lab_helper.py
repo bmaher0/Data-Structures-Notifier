@@ -19,6 +19,8 @@ labURLSuffixes = ["",
 		"14_smart_memory/lab_post.pdf"
 ]
 
+numberOfLabs = len(labURLSuffixes) - 1
+
 def getLabURL(semester, labNum):
 	return labURLBase % (semester, labURLSuffixes[labNum])
 

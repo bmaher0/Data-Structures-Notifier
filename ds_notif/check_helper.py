@@ -1,5 +1,6 @@
 import lab_helper, pdf_helper
 from pdfminer.pdfparser import PDFSyntaxError
+
 current_semester = "spring16"
 number_of_labs = 14
 
