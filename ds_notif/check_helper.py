@@ -37,5 +37,9 @@ def should_countinue():
 	except IOError:
 		return True
 
+def cleanup():
+	#TODO nake function to remove pdfs after main ends
+	pass
+
 if __name__ == "__main__":
 	pass
