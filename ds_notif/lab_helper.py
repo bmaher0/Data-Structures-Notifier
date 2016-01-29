@@ -1,8 +1,8 @@
 import urllib
 
-labURLBase = "http://www.cs.rpi.edu/academics/courses/%s/csci1200/labs/%s"
+lab_url_base = "http://www.cs.rpi.edu/academics/courses/%s/csci1200/labs/%s"
 
-labURLSuffixes = ["",
+lab_url_suffixes = [
 		"01_getting_started/lab_post.pdf",
 		"02_classes/lab_post.pdf",
 		"03_pointers/lab_post.pdf",
@@ -19,19 +19,19 @@ labURLSuffixes = ["",
 		"14_smart_memory/lab_post.pdf"
 ]
 
-numberOfLabs = len(labURLSuffixes) - 1
+number_of_labs = len(lab_url_suffixes)
 
-def getLabURL(semester, labNum):
-	return labURLBase % (semester, labURLSuffixes[labNum])
+def get_lab_url(semester, lab_no):
+	return lab_url_base % (semester, lab_url_suffixes[lab_no])
 
-def getLabName(semester, labNum):
-	return "%s-%s.pdf" % (semester, labURLSuffixes[labNum].split("/")[-2])
+def get_lab_name(semester, lab_no):
+	return "%s-%s.pdf" % (semester, lab_url_suffixes[lab_no].split("/")[-2])
 
-def saveLab(semester, labNum):
-	labURL = getLabURL(semester, labNum)
-	f = open(getLabName(semester, labNum), 'wb') 
-	f.write(urllib.urlopen(labURL).read())
+def save_lab(semester, lab_no):
+	lab_url = get_lab_url(semester, lab_no)
+	f = open(get_lab_name(semester, lab_no), 'wb') 
+	f.write(urllib.urlopen(lab_url).read())
 	f.close()
 
 if __name__ == "__main__":
-	saveLab("fall15", 1)
+	save_lab("fall15", 1)
