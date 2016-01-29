@@ -8,4 +8,4 @@ def get_pdf_mod_date(filename):
 	return doc.info[0]["ModDate"]
 
 if __name__ == "__main__":
-	pass
+	print get_pdf_first_line("spring16-01_getting_started.pdf")

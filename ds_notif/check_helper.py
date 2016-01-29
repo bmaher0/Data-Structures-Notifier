@@ -2,8 +2,9 @@ import lab_helper, pdf_helper
 from pdfminer.pdfparser import PDFSyntaxError
 
 current_semester = "spring16"
+escape_file = "stop.txt"
 
-def download_lab_pdfs():
+def refresh():
 	for i in range(lab_helper.number_of_labs):
 		lab_helper.save_lab(current_semester, i)
 
@@ -17,12 +18,24 @@ def check_mod_dates():
 def check_mod_date(filename):
 	try:
 		date = pdf_helper.get_pdf_mod_date(filename)
-		print "Good PDF!"
 		return date[2:6] == "2016"
 	except PDFSyntaxError:
-		print "Bad PDF!"
 		return None
 
+def check(current_max):
+	refresh()
+	new_max = check_mod_dates().index(True)
+	if new_max > current_max:
+		print "New lab! Lab #%d has been posted!" % (new_max+1)
+		return new_max
+	return current_max
+
+def should_countinue():
+	try:
+		open(escape_file)
+		return False
+	except IOError:
+		return True
+
 if __name__ == "__main__":
-	download_lab_pdfs()
-	print check_mod_dates()
+	pass

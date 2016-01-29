@@ -34,4 +34,4 @@ def save_lab(semester, lab_no):
 	f.close()
 
 if __name__ == "__main__":
-	save_lab("fall15", 1)
+	pass
