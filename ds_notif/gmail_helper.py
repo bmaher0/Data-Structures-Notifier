@@ -24,11 +24,11 @@ def send_mail(to_address, subject, msg_text):
 
 def send_mail_list(filename, subject, msg_text):
 	for address in eval(open(filename, 'r').read()):
-		print "Sending message to %s" % address
+		print "-Sending message to %s" % address
 		send_mail(address, subject, msg_text)
 
 def notify_assignment(assign):
-	print "Assignment: %s" % assign
+	print "-Assignment: %s" % assign
 	subject = "New Data Structures assignment: %s" % assign
 	msg_text = "A new Data Structures assignment, %s, has been posted to the calendar: %s" % (assign, html_helper.calendar_url)
 	send_mail_list(recip_path, subject, msg_text)

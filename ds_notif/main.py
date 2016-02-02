@@ -7,9 +7,9 @@ def main(cycles, delay):
 		if check_helper.should_countinue():
 			new_assigns, current_assigns = check_helper.new_assignments()
 			if new_assigns == set():
-				print "No new assignments"
+				print "-No new assignments"
 			else:
-				print "New assignments: %s" % (new_assigns)
+				print "-New assignments: %s" % (new_assigns)
 				for assign in new_assigns:
 					gmail_helper.notify_assignment(assign)
 				check_helper.write_assignments(current_assigns)
