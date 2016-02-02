@@ -1,7 +1,7 @@
 import html_helper
 
 escape_file = "stop.txt"
-filename = "assignments_cache.txt"
+filename = "assign_cache.txt"
 
 def get_assignments():
 	links_list = html_helper.get_calendar_links()
@@ -15,8 +15,8 @@ def get_assignments():
 
 def write_assignments(assign_set):
 	f = open(filename, 'w')
-	for assign in assign_set:
-		f.write(assign + '\n')
+	f.write(repr(assign_set))
+	f.close()
 
 #returns a set of new assignments
 def new_assignments():
@@ -25,13 +25,10 @@ def new_assignments():
 	return current_assigns - old_assigns, current_assigns
 
 def read_assignments():
-	assign_set = set()
 	try:
-		for assign in open(filename, 'r'):
-			assign_set.add(assign.strip())
+		return eval(open(filename, 'r').read())
 	except IOError:
-		pass
-	return assign_set
+		return set()
 
 def should_countinue():
 	try:

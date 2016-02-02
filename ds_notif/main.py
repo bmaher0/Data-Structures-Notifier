@@ -1,4 +1,4 @@
-import datetime, time, check_helper, gmail_helper, html_helper
+import datetime, time, check_helper, gmail_helper, sys
 
 
 def main(cycles, delay):
@@ -9,18 +9,20 @@ def main(cycles, delay):
 			if new_assigns == set():
 				print "No new assignments"
 			else:
-				print "New assignments: %s" % (list(new_assigns))
-				check_helper.write_assignments(current_assigns)
+				print "New assignments: %s" % (new_assigns)
 				for assign in new_assigns:
-					subject = "New Data Structures assignment: %s" % assign
-					msg_text = "A new Data Structures assignment, %s, has been posted to the calendar: %s" % (assign, html_helper.calendar_url)
-					gmail_helper.send_mail_list(gmail_helper.recip_path, subject, msg_text)
+					gmail_helper.notify_assignment(assign)
+				check_helper.write_assignments(current_assigns)
 		else:
 			return False
 		time.sleep(delay)
 	return True
 
 if __name__ == "__main__":
-	cycles = 2
-	delay = 5
-	main(cycles, delay)
+	if len(sys.argv) < 3:
+		print "ERROR: not enough arguments."
+		sys.exit(1)
+	else:
+		cycles = int(sys.argv[1])
+		delay = int(sys.argv[2])
+		main(cycles, delay)
