@@ -9,7 +9,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import mimetypes
 import os
+
 from apiclient import errors
+
 
 def SendMessage(service, user_id, message):
   """Send an email message.
@@ -102,7 +104,3 @@ def CreateMessageWithAttachment(
   message.attach(msg)
 
   return {'raw': base64.urlsafe_b64encode(message.as_string())}
-
-if __name__ == "__main__":
-  msg = CreateMessage("brianmaher529@gmail.com", "brianmaher529@gmail.com", "Test!", "Why hello there!")
-  open('base64.txt', 'w').write(str(msg))

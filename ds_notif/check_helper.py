@@ -1,34 +1,31 @@
-import lab_helper, pdf_helper
-from pdfminer.pdfparser import PDFSyntaxError
+import html_helper
 
-current_semester = "spring16"
 escape_file = "stop.txt"
+filename = "assignments_cache.txt"
 
-def refresh():
-	for i in range(lab_helper.number_of_labs):
-		lab_helper.save_lab(current_semester, i)
+def get_assignments():
+	links_list = html_helper.get_calendar_links()
+	assign_set = set() 
+	for link in links_list:
+		if "Lab" in link or "Homework" in link:
+			assign = link.split(":")[0]
+			if assign[-1] in "01234567890":
+				assign_set.add(assign)
+	return assign_set
 
-def check_mod_dates():
-	output = []
-	for i in range(lab_helper.number_of_labs):
-		filename = lab_helper.get_lab_name(current_semester, i)
-		output.append(check_mod_date(filename))
-	return output
+def write_assignments(assign_set):
+	f = open(filename, 'w')
+	for assign in assign_set:
+		f.write(assign + '\n')
 
-def check_mod_date(filename):
+def read_assignments():
+	assign_set = set()
 	try:
-		date = pdf_helper.get_pdf_mod_date(filename)
-		return date[2:6] == "2016"
-	except PDFSyntaxError:
-		return None
-
-def check(current_max):
-	refresh()
-	new_max = check_mod_dates().index(True)
-	if new_max > current_max:
-		print "New lab! Lab #%d has been posted!" % (new_max+1)
-		return new_max
-	return current_max
+		for assign in open(filename, 'r'):
+			assign_set.add(assign.strip())
+	except IOError:
+		pass
+	return assign_set
 
 def should_countinue():
 	try:
@@ -37,9 +34,6 @@ def should_countinue():
 	except IOError:
 		return True
 
-def cleanup():
-	#TODO nake function to remove pdfs after main ends
-	pass
 
 if __name__ == "__main__":
-	pass
+	write_assignments(get_assignments())
