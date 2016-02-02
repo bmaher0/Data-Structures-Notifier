@@ -18,6 +18,12 @@ def write_assignments(assign_set):
 	for assign in assign_set:
 		f.write(assign + '\n')
 
+#returns a set of new assignments
+def new_assignments():
+	old_assigns = read_assignments()
+	current_assigns = get_assignments()
+	return current_assigns - old_assigns, current_assigns
+
 def read_assignments():
 	assign_set = set()
 	try:

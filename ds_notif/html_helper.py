@@ -1,6 +1,8 @@
 from HTMLParser import HTMLParser
 import urllib
 
+calendar_url = "http://www.cs.rpi.edu/academics/courses/spring16/csci1200/calendar.php" 
+
 # create a subclass and override the handler methods
 class DSSiteParser(HTMLParser):
 	links = []
@@ -21,7 +23,7 @@ class DSSiteParser(HTMLParser):
 		return self.links
 
 def get_calendar_links():
-	return DSSiteParser().get_page_links("http://www.cs.rpi.edu/academics/courses/spring16/csci1200/calendar.php")
+	return DSSiteParser().get_page_links(calendar_url)
 
 if __name__ == "__main__":
 	print get_calendar_links()
