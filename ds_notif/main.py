@@ -11,7 +11,7 @@ def main(cycles, delay):
 			# check for new subscribes/unsubscribes and do that
 			gmail_helper.update_subscriptions()
 			# create a set for new assignments and a set of all current assignments
-			new_assigns, current_assigns = check_helper.new_assignments()
+			new_assigns, current_assigns = check_helper.update_assignments()
 			# if the new assignment set is empty
 			if new_assigns == set():
 				print "-No new assignments"

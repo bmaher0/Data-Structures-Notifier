@@ -26,7 +26,7 @@ def write_assignments(assign_set):
 	f.close()
 
 #returns a set of new assignments
-def new_assignments():
+def update_assignments():
 	#read old assignments and get current assignments
 	old_assigns = read_assignments()
 	current_assigns = get_assignments()
