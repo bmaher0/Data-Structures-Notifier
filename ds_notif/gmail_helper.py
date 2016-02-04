@@ -1,4 +1,4 @@
-import smtplib, imaplib, html_helper
+import smtplib, imaplib, html_helper, sys
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
@@ -26,7 +26,27 @@ def account_data():
 	return account_data[0].strip(), account_data[1].strip()
 
 def read_recip_set():
-	return eval(open(recip_path, 'r').read())
+	try:
+		return eval(open(recip_path, 'r').read())
+	except:
+		print "ERROR: %s not found." % recip_path
+		while True:
+			response = raw_input("Retry? (Y/N) ")
+			if response == "Y":
+				return read_recip_set()
+			elif response == "N":
+				while True:
+					response = raw_input("Create new empty recipient list? (Y/N) ")
+					if response == "Y":
+						write_recip_set(set())
+						return set()
+					elif response == "N":
+						print "Exiting."
+						sys.exit(1)
+					else:
+						print "Invalid command."
+			else:
+				print "Invalid command."
 
 def write_recip_set(recip_set):
 	open(recip_path, 'w').write(repr(recip_set))
