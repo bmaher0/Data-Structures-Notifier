@@ -1,3 +1,9 @@
+#Data Structures Notifier files:
+ds_notif/account_config.txt
+ds_notif/recip_list.txt
+ds_notif/assign_cache.txt
+*.pyc
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

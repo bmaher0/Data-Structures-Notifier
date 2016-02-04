@@ -2,8 +2,8 @@ import smtplib, imaplib, html_helper, sys
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-config_path = "C:/ds_notif/account_config.txt"
-recip_path = "C:/ds_notif/recip_list.txt"
+config_path = "account_config.txt"
+recip_path = "recip_list.txt"
 
 sig_file = r"msgs\sig.txt"
 welcome_file = r"msgs\welcome.txt"
