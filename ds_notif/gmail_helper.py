@@ -6,7 +6,7 @@ config_path = "C:/ds_notif/account_config.txt"
 recip_path = "C:/ds_notif/recip_list.txt"
 
 signature = '\n\n-Brian Maher\nmaherb@rpi.edu'
-signature += '\nEmail this address with subject line "subscribe" to subscribe or "unsubscribe" to unsubscribe.'
+signature += '\n\nEmail data.structures.notifier@gmail.com with subject "subscribe" to subscribe or "unsubscribe" to unsubscribe.'
 signature += '\nPlease contact me via my RPI email address with questions, comments, or feedback.'
 
 welcome_subject = "Welcome to Data Structures Notifications!"
@@ -97,8 +97,6 @@ def get_addresses_update():
 
 def update_subscriptions():
 	add, remove, other = get_addresses_update()
-	print add, remove, other
-
 	recip_set = read_recip_set()
 
 	if len(add) > 0:
