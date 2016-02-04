@@ -3,7 +3,7 @@ import urllib
 
 #a constant to store the URL of the calendar webpage
 calendar_url = "http://www.cs.rpi.edu/academics/courses/spring16/csci1200/calendar.php" 
-
+short_cal_url = "http://goo.gl/lhieNc"
 # create a subclass of HTML Parser
 class DSSiteParser(HTMLParser):
 	#the links of all link data

@@ -127,13 +127,24 @@ def get_addresses_update():
 		for num in data[0].split():
 			result, fetched_data = server.fetch(num, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")
 			fetched_data_list = fetched_data[0][1].split("\r\n")
-			from_info = fetched_data_list[0].replace("From: ", "", 1)
-			subject = fetched_data_list[1].replace("Subject: ", "", 1)
+
+			from_info = ""
+			subject = ""
+
+			for value in fetched_data_list:
+				if "From: " in value:
+					from_info = value.replace("From:", "", 1).strip()
+				elif "Subject: " in value:
+					subject = value.replace("Subject:", "", 1).strip()
+
+			command = subject.lower()
+			print from_info
 			from_address = from_address_helper(from_info)
 			print '-%s: "%s"' % (from_address, subject)
-			if subject.lower() == "subscribe":
+
+			if "subscribe" in command and not "un" in command:
 				add.add(from_address)
-			elif subject.lower() == "unsubscribe":
+			elif "unsubscribe" in command:
 				remove.add(from_address)
 			else:
 				other.add(from_address)
@@ -148,17 +159,15 @@ def update_subscriptions():
 	recip_set = read_recip_set()
 
 	if len(add) > 0:
-		recip_set = recip_set | add
 		welcome_sub, welcome_msg = read_msg_template(welcome_file)
 		print "*Subscribing:"
 		send_mail_list(welcome_sub, welcome_msg, add)
-
+		recip_set = recip_set | add
 	if len(remove) > 0:
 		remove_subject, remove_message = read_msg_template(remove_file)
-		recip_set = recip_set - remove
 		print "*Unsubscribing:"
 		send_mail_list(remove_subject, remove_message, remove)
-
+		recip_set = recip_set - remove
 	if len(other) > 0:
 		nc_subject, nc_message = read_msg_template(noncommand_file)
 		print "*Non-command notification:"
@@ -169,13 +178,15 @@ def notify_assignment(assign):
 	notif_subject, notif_message = read_msg_template(notif_file)
 	print "**Assignment: %s" % assign
 	subject = notif_subject % assign
-	msg_text = notif_message % (assign, html_helper.calendar_url)
+	msg_text = notif_message % (assign, html_helper.short_cal_url)
 	send_mail_list(subject, msg_text, read_recip_set())
 
 def from_address_helper(from_info):
-	addr_begin = from_info.find("<")
-	addr_end = from_info.find(">")
-	return from_info[addr_begin+1:addr_end]
+	if "<" in from_info:
+		addr_begin = from_info.find("<")
+		addr_end = from_info.find(">")
+		return from_info[addr_begin+1:addr_end]
+	return from_info
 
 if __name__ == "__main__":
 	update_subscribers()
