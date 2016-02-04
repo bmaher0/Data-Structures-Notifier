@@ -21,10 +21,6 @@ remove_message = "You will no longer receive Data Structures Notification emails
 nc_subject = "Invalid command for Data Structures Notifier"
 nc_message = "Your message is not a valid command." + signature
 
-def account_data():
-	account_data = open(config_path).readlines()
-	return account_data[0].strip(), account_data[1].strip()
-
 def read_recip_set():
 	try:
 		return eval(open(recip_path, 'r').read())
@@ -51,10 +47,41 @@ def read_recip_set():
 def write_recip_set(recip_set):
 	open(recip_path, 'w').write(repr(recip_set))
 
+def login(server):
+	username = ""
+	password = ""
+	found = False
+	try:
+		file_data = open(config_path).readlines()
+		username = file_data[0].strip()
+		password = file_data[1].strip()
+		found = True
+	except IOError:
+		print 
+	while True:
+		try:
+			server.login(username, password)
+			break;
+		except imaplib.IMAP4.error:
+			if found:
+				print "Invalid username or password." 
+			else:
+				print "%s not found." % config_path 
+			response = raw_input("Input new username and password? (Y/N) ")
+			if response == "Y":
+				username = raw_input("New gmail address (including @gmail.com): ")
+				password = raw_input("New password: ")
+				f = open(config_path, 'w')
+				f.write(username + '\n' + password)
+				f.close()
+			else:
+				print "Exiting."
+				sys.exit(1)
+
 def send_mail(to_address, subject, msg_text):
-	file_data = open(config_path).readlines()
-	username = file_data[0].strip()
-	password = file_data[1].strip()
+	server = smtplib.SMTP('smtp.gmail.com', 587)
+	server.starttls()
+	login(server)
 
 	msg = MIMEMultipart()
 	msg['From'] = username
@@ -62,18 +89,13 @@ def send_mail(to_address, subject, msg_text):
 	msg['Subject'] = subject
 	msg.attach(MIMEText(msg_text, 'plain'))
 
-	server = smtplib.SMTP('smtp.gmail.com', 587)
-	server.starttls()
-	server.login(username, password)
 	server.sendmail(username, to_address, msg.as_string())
 	server.quit()
 
 def send_mail_list(subject, msg_text, address_set):
-	username, password = account_data()
-
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	server.login(username, password)
+	login(server)
 
 	for to_address in address_set:
 		msg = MIMEMultipart()
@@ -87,11 +109,10 @@ def send_mail_list(subject, msg_text, address_set):
 	server.quit()
 
 def get_addresses_update():
-	username, password = account_data()
 	add, remove, other = set(), set(), set()
 
 	server = imaplib.IMAP4_SSL('imap.gmail.com', 993)
-	server.login(username, password)
+	login(server)
 	server.select("INBOX")
 	result, data = server.search(None, "ALL")
 	if result == "OK":
