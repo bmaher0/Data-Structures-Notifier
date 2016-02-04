@@ -1,0 +1,3 @@
+Your message is not a valid command for Data Structures Notifier. 
+
+Valid commands are "subscribe" and "unsubscribe".

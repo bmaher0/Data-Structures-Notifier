@@ -9,9 +9,7 @@ sig_file = r"msgs\sig.txt"
 welcome_file = r"msgs\welcome.txt"
 notif_file = r"msgs\notif.txt"
 remove_file = r"msgs\remove.txt"
-
-#nc_subject = "Invalid command for Data Structures Notifier"
-#nc_message = "Your message is not a valid command." + signature
+noncommand_file = r"msgs\noncommand.txt"
 
 def read_signature():
 	return open(sig_file, 'r').read()
@@ -23,7 +21,7 @@ def read_msg_template(filename):
 		sys.exit(1)
 	else:
 		subject = contents[0].strip()
-		message = ''.join(contents[1:])
+		message = ''.join(contents[1:]) + read_signature()
 		return subject, message
 
 def read_recip_set():
@@ -162,6 +160,7 @@ def update_subscriptions():
 		send_mail_list(remove_subject, remove_message, remove)
 
 	if len(other) > 0:
+		nc_subject, nc_message = read_msg_template(noncommand_file)
 		print "*Non-command notification:"
 		send_mail_list(nc_subject, nc_message, other)
 	write_recip_set(recip_set)
