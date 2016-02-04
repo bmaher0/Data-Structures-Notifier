@@ -77,11 +77,12 @@ def login(server):
 			else:
 				print "Exiting."
 				sys.exit(1)
+	return username
 
 def send_mail(to_address, subject, msg_text):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	login(server)
+	username = login(server)
 
 	msg = MIMEMultipart()
 	msg['From'] = username
@@ -95,7 +96,7 @@ def send_mail(to_address, subject, msg_text):
 def send_mail_list(subject, msg_text, address_set):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	login(server)
+	username = login(server)
 
 	for to_address in address_set:
 		msg = MIMEMultipart()

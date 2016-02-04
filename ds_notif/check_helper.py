@@ -25,13 +25,12 @@ def write_assignments(assign_set):
 	f.write(repr(assign_set))
 	f.close()
 
-#returns a set of new assignments
+# return a tuple of the new assignment set and the current
+# assignment set
 def update_assignments():
 	#read old assignments and get current assignments
 	old_assigns = read_assignments()
 	current_assigns = get_assignments()
-	# return a tuple of the new assignment set and the current
-	# assignment set
 	return current_assigns - old_assigns, current_assigns
 
 
