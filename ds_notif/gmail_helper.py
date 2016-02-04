@@ -5,21 +5,26 @@ from email.MIMEText import MIMEText
 config_path = "C:/ds_notif/account_config.txt"
 recip_path = "C:/ds_notif/recip_list.txt"
 
-signature = '\n\n-Brian Maher\nmaherb@rpi.edu'
-signature += '\n\nEmail data.structures.notifier@gmail.com with subject "subscribe" to subscribe or "unsubscribe" to unsubscribe.'
-signature += '\nPlease contact me via my RPI email address with questions, comments, or feedback.'
+sig_file = r"msgs\sig.txt"
+welcome_file = r"msgs\welcome.txt"
+notif_file = r"msgs\notif.txt"
+remove_file = r"msgs\remove.txt"
 
-welcome_subject = "Welcome to Data Structures Notifications!"
-welcome_message = "You will recieve emails when labs and homeworks are posted to the course calendar. I hope you find this utility useful!" + signature
+#nc_subject = "Invalid command for Data Structures Notifier"
+#nc_message = "Your message is not a valid command." + signature
 
-notif_subject = "New Data Structures assignment: %s"
-notif_message = "A new Data Structures assignment, %s, has been posted to the calendar: %s" + signature
+def read_signature():
+	return open(sig_file, 'r').read()
 
-remove_subject = "You have unsubscribed from Data Structures Notifications"
-remove_message = "You will no longer receive Data Structures Notification emails. Good luck in Data Structures and the rest of your endeavors!" + signature
-
-nc_subject = "Invalid command for Data Structures Notifier"
-nc_message = "Your message is not a valid command." + signature
+def read_msg_template(filename):
+	contents = open(filename, 'r').readlines()
+	if len(contents) < 2:
+		print "ERROR bad message template: %s" % filename
+		sys.exit(1)
+	else:
+		subject = contents[0].strip()
+		message = ''.join(contents[1:])
+		return subject, message
 
 def read_recip_set():
 	try:
@@ -117,14 +122,17 @@ def get_addresses_update():
 	server.select("INBOX")
 	result, data = server.search(None, "ALL")
 	if result == "OK":
+		if len(data[0].split()) > 0:
+			print "*Commands received:"
+		else:
+			print "*No commands received"
 		for num in data[0].split():
-			print num
 			result, fetched_data = server.fetch(num, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")
 			fetched_data_list = fetched_data[0][1].split("\r\n")
 			from_info = fetched_data_list[0].replace("From: ", "", 1)
 			subject = fetched_data_list[1].replace("Subject: ", "", 1)
 			from_address = from_address_helper(from_info)
-			print subject, from_address
+			print '-%s: "%s"' % (from_address, subject)
 			if subject.lower() == "subscribe":
 				add.add(from_address)
 			elif subject.lower() == "unsubscribe":
@@ -143,10 +151,12 @@ def update_subscriptions():
 
 	if len(add) > 0:
 		recip_set = recip_set | add
+		welcome_sub, welcome_msg = read_msg_template(welcome_file)
 		print "*Subscribing:"
-		send_mail_list(welcome_subject, welcome_message, add)
+		send_mail_list(welcome_sub, welcome_msg, add)
 
 	if len(remove) > 0:
+		remove_subject, remove_message = read_msg_template(remove_file)
 		recip_set = recip_set - remove
 		print "*Unsubscribing:"
 		send_mail_list(remove_subject, remove_message, remove)
@@ -157,7 +167,8 @@ def update_subscriptions():
 	write_recip_set(recip_set)
 
 def notify_assignment(assign):
-	print "-Assignment: %s" % assign
+	notif_subject, notif_message = read_msg_template(notif_file)
+	print "**Assignment: %s" % assign
 	subject = notif_subject % assign
 	msg_text = notif_message % (assign, html_helper.calendar_url)
 	send_mail_list(subject, msg_text, read_recip_set())

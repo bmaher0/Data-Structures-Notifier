@@ -4,6 +4,7 @@ import datetime, time, check_helper, gmail_helper, sys
 # delay is the delay (in seconds) between each cycle
 def main(cycles, delay):
 	for i in range(cycles):
+		print ""
 		# print time stamp and cycle number
 		print "%s #%d" % (datetime.datetime.now(), i)
 		# if the escape file is not fould
@@ -14,10 +15,10 @@ def main(cycles, delay):
 			new_assigns, current_assigns = check_helper.update_assignments()
 			# if the new assignment set is empty
 			if new_assigns == set():
-				print "-No new assignments"
+				print "*No new assignments"
 			# if there are new assignments
 			else:
-				print "-New assignments: %s" % new_assigns
+				print "*New assignments: %s" % new_assigns
 				#for each new assignment, send out an email notification
 				for assign in new_assigns:
 					gmail_helper.notify_assignment(assign)
