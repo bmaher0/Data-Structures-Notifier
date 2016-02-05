@@ -2,6 +2,7 @@ import smtplib, imaplib, html_helper, sys
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
+
 config_path = "account_config.txt"
 recip_path = "recip_list.txt"
 
@@ -35,7 +36,7 @@ def read_recip_set():
 				return read_recip_set()
 			elif response == "N":
 				while True:
-					response = raw_input("Create new empty recipient list? (Y/N) ")
+					response = raw_input("Create new empty recipient list? If N then the system will exit. (Y/N) ")
 					if response == "Y":
 						write_recip_set(set())
 						return set()

@@ -1,2 +1,2 @@
 New Data Structures assignment: %s
-A new Data Structures assignment, %s, has been posted to the calendar: %s
+A new assignment, %s, has been posted to the course calendar: %s
