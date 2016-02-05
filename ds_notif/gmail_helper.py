@@ -1,4 +1,4 @@
-import smtplib, imaplib, html_helper, sys
+import datetime, smtplib, imaplib, html_helper, sys
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
@@ -11,6 +11,7 @@ welcome_file = r"msgs\welcome.txt"
 notif_file = r"msgs\notif.txt"
 remove_file = r"msgs\remove.txt"
 noncommand_file = r"msgs\noncommand.txt"
+test_file = r"msgs\test.txt"
 
 def read_signature():
 	return open(sig_file, 'r').read()
@@ -114,7 +115,7 @@ def send_mail_list(subject, msg_text, address_set):
 	server.quit()
 
 def get_addresses_update():
-	add, remove, other = set(), set(), set()
+	add, remove, test, other= set(), set(), set(), set()
 
 	server = imaplib.IMAP4_SSL('imap.gmail.com', 993)
 	login(server)
@@ -147,16 +148,18 @@ def get_addresses_update():
 				add.add(from_address)
 			elif "unsubscribe" in command:
 				remove.add(from_address)
+			elif "test" in command:
+				test.add(from_address)
 			else:
 				other.add(from_address)
 			server.store(num, '+FLAGS', '\\Deleted')
 	else:
 		pass
 		#this will be an error of some sort
-	return add, remove, other
+	return add, remove, test, other
 
 def update_subscriptions():
-	add, remove, other = get_addresses_update()
+	add, remove, test, other = get_addresses_update()
 	recip_set = read_recip_set()
 
 	if len(add) > 0:
@@ -173,6 +176,10 @@ def update_subscriptions():
 		nc_subject, nc_message = read_msg_template(noncommand_file)
 		print "*Non-command notification:"
 		send_mail_list(nc_subject, nc_message, other)
+	if len(test) > 0:
+		test_subject, test_message = read_msg_template(test_file)
+		print "*Responding to test request:"
+		send_mail_list(test_subject, test_message % datetime.datetime.now(), test)
 	write_recip_set(recip_set)
 
 def notify_assignment(assign):
