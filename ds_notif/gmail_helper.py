@@ -16,14 +16,16 @@ test_file = r"msgs\test.txt"
 def read_signature():
 	return open(sig_file, 'r').read()
 
-def read_msg_template(filename):
+def read_msg_template(filename, signature=True):
 	contents = open(filename, 'r').readlines()
 	if len(contents) < 2:
 		print "ERROR bad message template: %s" % filename
 		sys.exit(1)
 	else:
 		subject = contents[0].strip()
-		message = ''.join(contents[1:]) + read_signature()
+		message = ''.join(contents[1:])
+		if signature:
+			message += read_signature()
 		return subject, message
 
 def read_recip_set():
@@ -177,7 +179,7 @@ def update_subscriptions():
 		print "*Non-command notification:"
 		send_mail_list(nc_subject, nc_message, other)
 	if len(test) > 0:
-		test_subject, test_message = read_msg_template(test_file)
+		test_subject, test_message = read_msg_template(test_file, signature=False)
 		print "*Responding to test request:"
 		send_mail_list(test_subject, test_message % datetime.datetime.now(), test)
 	write_recip_set(recip_set)
