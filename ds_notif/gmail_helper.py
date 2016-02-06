@@ -12,6 +12,8 @@ notif_file = r"msgs\notif.txt"
 remove_file = r"msgs\remove.txt"
 noncommand_file = r"msgs\noncommand.txt"
 test_file = r"msgs\test.txt"
+already_add_file = r"msgs\already_add.txt"
+already_rem_file = r"msgs\already_rem.txt"
 
 def read_signature():
 	return open(sig_file, 'r').read()
@@ -164,20 +166,37 @@ def update_subscriptions():
 	add, remove, test, other = get_addresses_update()
 	recip_set = read_recip_set()
 
+	add_already = add & recip_set 
+	add = add - add_already
+
+	remove_already = remove - recip_set
+	remove = remove - remove_already
+
 	if len(add) > 0:
 		welcome_sub, welcome_msg = read_msg_template(welcome_file)
 		print "*Subscribing:"
 		send_mail_list(welcome_sub, welcome_msg, add)
 		recip_set = recip_set | add
+	if len(add_already) > 0:
+		already_add_sub, already_add_msg = read_msg_template(already_add_file)
+		print "*Already subscribed:"
+		send_mail_list(already_add_sub, already_add_msg, add_already)
+
 	if len(remove) > 0:
 		remove_subject, remove_message = read_msg_template(remove_file)
 		print "*Unsubscribing:"
 		send_mail_list(remove_subject, remove_message, remove)
 		recip_set = recip_set - remove
+	if len(remove_already) > 0:
+		alr_rem_sub, alr_rem_msg = read_msg_template(already_rem_file)
+		print "Not subscribed:"
+		send_mail_list(alr_rem_sub, alr_rem_msg, remove_already)
+
 	if len(other) > 0:
 		nc_subject, nc_message = read_msg_template(noncommand_file)
 		print "*Non-command notification:"
 		send_mail_list(nc_subject, nc_message, other)
+	
 	if len(test) > 0:
 		test_subject, test_message = read_msg_template(test_file, signature=False)
 		print "*Responding to test request:"
