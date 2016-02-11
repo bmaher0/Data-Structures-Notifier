@@ -71,9 +71,9 @@ def read_recip_set():
 						print "Exiting."
 						sys.exit(1)
 					else:
-						print "Invalid command."
+						print "ERROR invalid command."
 			else:
-				print "Invalid command."
+				print "ERROR invalid command."
 
 # write new recipient set
 def write_recip_set(recip_set):
@@ -175,20 +175,22 @@ def get_addresses_update():
 		# for each message in the inbox
 		for num in data[0].split():
 			# fetch the message from the inbox
-			result, fetched_data = server.fetch(num, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")
-			fetched_data_list = fetched_data[0][1].split("\r\n")
+			result, fetched_header_data = server.fetch(num, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")# #BODY[TEXT])")
+			result, fetched_body_data = server.fetch(num, "(BODY[TEXT])")
+			fetched_header_list = fetched_header_data[0][1].split("\r\n")
+			body_string = fetched_body_data[0][1].split("\r\n\r")[0]
 
 			from_info = ""
 			subject = ""
 
 			# find the from address and subject in the email
-			for value in fetched_data_list:
+			for value in fetched_header_list:
 				if "From: " in value:
 					from_info = value.replace("From:", "", 1).strip()
 				elif "Subject: " in value:
 					subject = value.replace("Subject:", "", 1).strip()
 
-			command = subject.lower()
+			command = (subject + body_string).lower()
 			print from_info
 			from_address = from_address_helper(from_info)
 			print '-%s: "%s"' % (from_address, subject)

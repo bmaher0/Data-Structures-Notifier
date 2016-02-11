@@ -1,8 +1,34 @@
 import datetime, time, check_helper, gmail_helper, sys
 
-# cycles is the number of cycles to iterate through before terminating
-# delay is the delay (in seconds) between each cycle
-def main(cycles, delay):
+def main():
+	# cycles is the number of cycles to iterate through before terminating, defaults to 4
+	cycles = 4
+	# delay is the delay (in seconds) between each cycle, defaults to 5
+	delay = 5
+	# if there are two command line arguments, use them to set cycles and delay
+	if len(sys.argv) == 3:
+		#set the cycles and delay, or exit if there is a ValueError
+		try:
+			cycles = int(sys.argv[1])
+			delay = int(sys.argv[2])
+			#if the cycles are positive integers, run the main
+			if not (cycles > 0 and delay > 0):
+				raise ValueError
+		except ValueError:
+			print "ERROR: arguments are not both positive integers."
+			sys.exit(1)
+	#if there are no command line arguments, pass which will use default 
+	# cycle and delay
+	elif (len(sys.argv) == 1):
+		pass
+	# if there are any other number of arguments, throw an error and exit
+	else:
+		print "ERROR: incorrect number of arguments:",
+		print "2 expected, %d given." % (len(sys.argv)-1)
+		sys.exit(1)
+
+	print "\nRunning %d %d-second cycles" % (cycles, delay)
+
 	for i in range(cycles):
 		print ""
 		# print time stamp and cycle number
@@ -33,32 +59,4 @@ def main(cycles, delay):
 	return True
 
 if __name__ == "__main__":
-	# default values for cycles and delays
-	cycles = 4
-	delay = 5
-	# if there are two command line arguments, use them to set cycles and delay
-	if len(sys.argv) == 3:
-		#set the cycles and delay, or exit if there is a ValueError
-		try:
-			cycles = int(sys.argv[1])
-			delay = int(sys.argv[2])
-		except ValueError:
-			print "ERROR: arguments are not both positive integers."
-			sys.exit(1)
-	#if there are no command line arguments, pass which will use default 
-	# cycle and delay
-	elif (len(sys.argv) == 1):
-		pass
-	# if there are any other number of arguments, throw an error and exit
-	else:
-		print "ERROR: incorrect number of arguments:",
-		print "2 expected, %d given." % (len(sys.argv)-1)
-		sys.exit(1)
-
-	#if the cycles are positive integers, run the main
-	if cycles > 0 and delay > 0:
-		main(cycles, delay)
-	#if they are not positive integers, throw an error and exit
-	else:
-		print "ERROR: arguments are not both positive integers."
-		sys.exit(1)
+	main()
