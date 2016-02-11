@@ -16,3 +16,5 @@ Usage:
 -There should be an account_config.txt file with the username for the email account on the first line and the password on the second line. 
 
 -Each possible message needs to have a message template text file with the subject on the first line and the message on subsequent lines.
+
+Note: Unfortunately, I am waiting on a delivary that will let me host 24/7 from a Raspberry Pi. Until then, it will be running part-time on my laptop.
