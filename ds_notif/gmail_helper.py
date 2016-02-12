@@ -9,21 +9,21 @@ recip_path = "recip_list.txt"
 
 # locations of various message templates
 # signature, appended to all outgoing messages
-sig_file = r"msgs\sig.txt"
+sig_file = "msgs/sig.txt"
 # message for new subscribers
-welcome_file = r"msgs\welcome.txt"
+welcome_file = "msgs/welcome.txt"
 # template for assignment notification
-notif_file = r"msgs\notif.txt"
+notif_file = "msgs/notif.txt"
 # message for unsubscribers
-remove_file = r"msgs\remove.txt"
+remove_file = "msgs/remove.txt"
 # message to respond to invalid commands
-noncommand_file = r"msgs\noncommand.txt"
+noncommand_file = "msgs/noncommand.txt"
 # message to respond to test command
-test_file = r"msgs\test.txt"
+test_file = "msgs/test.txt"
 # response to subscribe request when already subscribed
-already_add_file = r"msgs\already_add.txt"
+already_add_file = "msgs/already_add.txt"
 # response to unsubscribe request when not subscribed
-already_rem_file = r"msgs\already_rem.txt"
+already_rem_file = "msgs/already_rem.txt"
 
 # reads signature from file
 def read_signature():
