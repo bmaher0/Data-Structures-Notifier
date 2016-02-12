@@ -178,7 +178,7 @@ def get_addresses_update():
 			result, fetched_header_data = server.fetch(num, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")# #BODY[TEXT])")
 			result, fetched_body_data = server.fetch(num, "(BODY[TEXT])")
 			fetched_header_list = fetched_header_data[0][1].split("\r\n")
-			body_string = fetched_body_data[0][1].split("\r\n\r")[0]
+			body_string = fetched_body_data[0][1]
 
 			from_info = ""
 			subject = ""
@@ -193,7 +193,7 @@ def get_addresses_update():
 			command = (subject + body_string).lower()
 			print from_info
 			from_address = from_address_helper(from_info)
-			print '-%s: "%s"' % (from_address, subject)
+			print '-%s: "%s"' % (from_address, command)
 
 			# evaluate the command and sort the sender into the appropriate set
 			if "subscribe" in command and not "un" in command:
